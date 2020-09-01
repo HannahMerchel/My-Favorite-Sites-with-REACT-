@@ -3,16 +3,40 @@ import React from 'react';
 import { Accordion, Input, Button } from 'chayns-components/lib';
 
 function Form() {
+
+    const [name, setName] = React.useState('');
+    const [eMail, setEMail] = React.useState('');
+    const [adress, setAdress] = React.useState('');
+    const [comment, setComment] = React.useState('');
+
+    function submit() {
+        if (!(name === '' || eMail === '')) {
+            let message = `Nachricht von My Favourite Site:\nName: ${name};\n eMail: ${eMail};\n SiteAdresse: `;
+            if (adress !== '') message += adress;
+            else message += '/';
+            message += ';\n Kommentar: ';
+            if (comment !== '') message += comment;
+            else message += '/';
+            message += ';';
+            chayns.intercom.sendMessageToPage({ text: message });
+            setName('');
+            setEMail('');
+            setAdress('');
+            setComment('');
+            chayns.dialog.alert('Vielen Dank für Deinen Vorschlag!', 'Dein Formula wurde versandt.');
+        }
+    }
+
     return (
         <div>
-            <Accordion head="Willst Du eine Site vorschlagen?">
+            <Accordion head="Willst Du eine Site vorschlagen?" open='false'>
                 <div className="accordion__content">
-                    <Input placeholder="Name" type="name" required={true}/>
-                    <Input placeholder="eMail" type="mail" required={true}/>
-                    <Input placeholder="Site-Adresse" type="url"/>
-                    <Input placeholder="Kommentar" type="text"/>
+                    <Input placeholder="Name" type="name" required={true} value={name} onChange={(event) => { setName(event); }}/>
+                    <Input placeholder="eMail" type="mail" required={true} value={eMail} onChange={(event) => { setEMail(event); }}/>
+                    <Input placeholder="Site-Adresse" type="url" value={adress} onChange={(event) => { setAdress(event); }}/>
+                    <Input placeholder="Kommentar" type="text" value={comment} onChange={(event) => { setComment(event); }}/>
                     <div style={{ textAlign: 'center', paddingTop: '8px' }}>
-                        <Button>Formular versenden</Button>
+                        <Button onClick={submit} disabled={name === '' || eMail === ''}>Formular versenden</Button>
                     </div>
                 </div>
             </Accordion>
