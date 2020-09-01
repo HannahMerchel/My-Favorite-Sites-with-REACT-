@@ -20,7 +20,6 @@ class SitesListItem extends React.PureComponent {
             title: props.title,
             siteId: props.siteId,
         };
-        console.log(this.state.siteId)
         this.checkIcon = this.checkIcon.bind(this);
         this.viewSite = this.viewSite.bind(this);
     }
