@@ -1,14 +1,15 @@
 import React from 'react';
+import './siteList.scss';
 
 // chayns-components
 import { Button, Input } from 'chayns-components/lib';
 
 // components
-import SiteListItem from './SitesListItem';
+import SiteListItem from './siteListItem/SitesListItem';
 
 
 // component with a search bar, sites-list and load-more button
-class SitesList extends React.PureComponent {
+class SiteList extends React.PureComponent {
     constructor() {
         super();
         this.state = {
@@ -43,13 +44,13 @@ class SitesList extends React.PureComponent {
     // clears the old site list and searches new sites (once the site list isn't loading)
     async searchSites(string) {
         const { loading } = this.state;
-        if (string !== '' && !loading) {
+        if (!loading) {
             await this.setState((prevState) => {
                 clearTimeout(prevState.timeout);
                 return {
                     loading: true,
                     skip: 0,
-                    searchString: string,
+                    searchString: string !== '' ? string : 'love',
                     itemComponents: [],
                 };
             });
@@ -105,27 +106,22 @@ class SitesList extends React.PureComponent {
                     design={Input.BORDER_DESIGN}
                     icon="fa fa-search"
                     onChange={this.onChangeSearch}
-                    style={{ marginTop: '10px', marginBottom: '10px' }}
+                    className="site_search__input"
                 />
-                <div
-                    style={{
-                        paddingTop: '8px',
-                        marginLeft: '-9px',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        flexDirection: 'row',
-                        placeItems: 'center',
-                        justifyContent: 'flex-start',
-                    }}
-                >
+                <div className="site_list__wrapper">
                     {itemComponents}
                 </div>
-                <div style={{ textAlign: 'center', marginTop: '8px', marginBottom: '10px' }}>
-                    <Button onClick={this.loadMore} disabled={(loading || !moreSitesAvailable)}>Mehr laden</Button>
+                <div className="site_load_button__wrapper">
+                    <Button
+                        onClick={this.loadMore}
+                        disabled={(loading || !moreSitesAvailable)}
+                    >
+                        Mehr laden
+                    </Button>
                 </div>
             </div>
         );
     }
 }
 
-export default SitesList;
+export default SiteList;

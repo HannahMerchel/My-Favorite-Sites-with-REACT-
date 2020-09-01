@@ -1,4 +1,5 @@
 import React from 'react';
+import './siteListItem.scss';
 import PropTypes from 'prop-types';
 
 
@@ -26,7 +27,7 @@ class SitesListItem extends React.PureComponent {
     }
 
     // checks if the site has a icon, if so sets the site icon as own icon
-    async checkIcon() {
+    checkIcon() {
         const { siteId } = this.state;
         fetch(`https://chayns.tobit.com/storage/${siteId}/Images/icon-57.png`, { method: 'HEAD' })
             .then((response) => {
@@ -50,32 +51,14 @@ class SitesListItem extends React.PureComponent {
             <button
                 type="button"
                 onClick={this.viewSite}
-                style={{
-                    height: '77px',
-                    width: '81px',
-                    marginBottom: '8px',
-                    marginRight: '15px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    placeItems: 'center',
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    color: 'white',
-                }}
+                className="site_item__wrapper"
             >
                 <img
                     src={imgUrl}
                     alt="Site-icon"
                     className="siteIcon"
                 />
-                <p style={{
-                    paddingTop: '5px',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                    width: '90px',
-                    marginBottom: '-5px',
-                    whiteSpace: 'nowrap',
-                }}
-                >
+                <p className="site_item__title">
                     {title}
                 </p>
             </button>
