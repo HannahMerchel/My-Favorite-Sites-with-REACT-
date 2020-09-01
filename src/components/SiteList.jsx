@@ -25,7 +25,7 @@ class SitesList extends React.PureComponent {
             .then((response) => response.json())
             .then((data) => {
                 this.setState({
-                    itemComponents: (data.Data).map((item) => (<SiteListItem key={item.siteId} image={`https://chayns.tobit.com/storage/${item.siteId}/Images/icon-57.png`} title={item.appstoreName}/>))
+                    itemComponents: (data.Data).map((item) => (<SiteListItem key={item.siteId} siteId={item.siteId} image={`https://chayns.tobit.com/storage/${item.siteId}/Images/icon-57.png`} title={item.appstoreName}/>))
                 });
                 chayns.hideWaitCursor();
             });

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const propTypes = {
     image: PropTypes.string,
     title: PropTypes.string,
-    key: PropTypes.string.isRequired,
+    siteId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -18,8 +18,9 @@ class SitesListItem extends React.PureComponent {
         this.state = {
             image: props.image,
             title: props.title,
-            siteId: props.key,
+            siteId: props.siteId,
         };
+        console.log(this.state.siteId)
         this.checkIcon = this.checkIcon.bind(this);
         this.viewSite = this.viewSite.bind(this);
     }
