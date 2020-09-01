@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import { Button, Input, CHAYNS_CSS_VERSION } from 'chayns-components/lib';
+// chayns-components
+import { Button, Input } from 'chayns-components/lib';
 
+// components
 import SiteListItem from './SitesListItem';
 
+// component with a search bar, sites-list and load-more button
 class SitesList extends React.PureComponent {
     constructor() {
         super();
@@ -20,10 +23,12 @@ class SitesList extends React.PureComponent {
         this.searchSites = this.searchSites.bind(this);
     }
 
+    // loads the first 30 Sites when the cpmonent is created
     componentDidMount() {
         this.loadSites();
     }
 
+    // starts a timer to search new sites (frist clears the previous one)
     onChangeSearch(event) {
         this.setState((prevState) => {
             clearTimeout(prevState.timeout);
@@ -32,10 +37,12 @@ class SitesList extends React.PureComponent {
             }, 500);
             return { timeout: dTimeout };
         });
-    };
+    }
 
+    // clears the old site list and searches new sites (once the site list isn't loading)
     async searchSites(string) {
-        if (this.state.timeout) {
+        const { loading } = this.state;
+        if (string !== '' && !loading) {
             await this.setState((prevState) => {
                 clearTimeout(prevState.timeout);
                 return {
@@ -46,46 +53,51 @@ class SitesList extends React.PureComponent {
                 };
             });
             this.loadSites();
+        } else {
+            this.onChangeSearch(string);
         }
     }
 
+    // loads and appends list of sites with the current search string
     loadSites() {
+        const { searchString, skip } = this.state;
         chayns.showWaitCursor();
-        this.setState({ loading: true })
-        fetch(`https://chayns1.tobit.com/TappApi/Site/SlitteApp?SearchString=${this.state.searchString}&Skip=${this.state.skip}&Take=31`)
+        this.setState({ loading: true });
+        fetch(`https://chayns1.tobit.com/TappApi/Site/SlitteApp?SearchString=${searchString}&Skip=${skip}&Take=31`)
             .then((response) => response.json())
             .then((data) => {
                 this.setState((prevState) => {
-                    let itemComponents = [...prevState.itemComponents]
-                    itemComponents.push((data.Data).map((item) => (
+                    const dItemComponents = [...prevState.itemComponents];
+                    let newItemComponents = (data.Data).map((item) => (
                         <SiteListItem
                             key={item.siteId}
                             siteId={item.siteId}
-                            image={`https://chayns.tobit.com/storage/${item.siteId}/Images/icon-57.png`} title={item.appstoreName}
+                            image={`https://chayns.tobit.com/storage/${item.siteId}/Images/icon-57.png`}
+                            title={item.appstoreName}
                         />
-                    )));
-                    // check ahead if there are more Sites
-                    if (itemComponents[0].length === 31) {
-                        itemComponents = itemComponents[0].slice(0, 30);
+                    ));
+                    // to cheack if there will be more sites available to load
+                    if (newItemComponents.length === 31) {
+                        newItemComponents = newItemComponents.slice(0, 30);
+                    } else {
+                        this.setState({ moreSitesAvailable: false });
                     }
-                    else {
-                        this.setState({ moreSitesAvailable: false })
-                    }
-                    return { itemComponents: itemComponents }
+                    dItemComponents.push(newItemComponents);
+                    return { itemComponents: dItemComponents };
                 });
-                this.setState({loading: false })
+                this.setState({ loading: false });
                 chayns.hideWaitCursor();
             });
     }
 
+    // increases skip and loads the additional sites
     async loadMore() {
-        await this.setState((prevState) => {
-            return { skip: prevState.skip + 30 }
-        });
+        await this.setState((prevState) => ({ skip: prevState.skip + 30 }));
         this.loadSites();
     }
 
     render() {
+        const { itemComponents, loading, moreSitesAvailable } = this.state;
         return (
             <div>
                 <Input
@@ -94,10 +106,12 @@ class SitesList extends React.PureComponent {
                     design={Input.BORDER_DESIGN}
                     icon="fa fa-search"
                     onChange={this.onChangeSearch}
+                    style={{ marginTop: '10px', marginBottom: '10px' }}
                 />
                 <div
                     style={{
                         paddingTop: '8px',
+                        marginLeft: '-10px',
                         display: 'flex',
                         flexWrap: 'wrap',
                         flexDirection: 'row',
@@ -105,13 +119,13 @@ class SitesList extends React.PureComponent {
                         justifyContent: 'flex-start',
                     }}
                 >
-                    {this.state.itemComponents}
+                    {itemComponents}
                 </div>
-                <div style={{ textAlign: 'center' }}>
-                    <Button onClick={this.loadMore} disabled={(this.state.loading || !this.state.moreSitesAvailable)}>Mehr laden</Button>
+                <div style={{ textAlign: 'center', marginTop: '8px', marginBottom: '10px' }}>
+                    <Button onClick={this.loadMore} disabled={(loading || !moreSitesAvailable)}>Mehr laden</Button>
                 </div>
             </div>
-        )
+        );
     }
 }
 

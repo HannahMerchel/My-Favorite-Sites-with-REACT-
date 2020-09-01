@@ -12,6 +12,7 @@ const defaultProps = {
     title: 'Site-Title',
 };
 
+// component that represents a site, has a link, title and icon
 class SitesListItem extends React.PureComponent {
     constructor(props) {
         super();
@@ -24,25 +25,30 @@ class SitesListItem extends React.PureComponent {
         this.viewSite = this.viewSite.bind(this);
     }
 
+    // checks if the site has a icon, if so sets the site icon as own icon
     checkIcon() {
-        fetch(this.state.image, { method: 'HEAD' })
+        const { image } = this.state;
+        fetch(image, { method: 'HEAD' })
             .then(() => {})
             .catch(() => {
                 this.setState({ image: 'https://sub60.tobit.com/l/152342?size=100\\' });
             });
     }
 
+    // opens the site in a new tab
     viewSite() {
-        chayns.openUrlInBrowser(`https://chayns.net/${this.state.siteId}/`);
+        const { siteId } = this.state;
+        chayns.openUrlInBrowser(`https://chayns.net/${siteId}/`);
     }
-    
+
     render() {
+        const { title, image } = this.state;
         this.checkIcon();
-        if (this.state.title.length > 11) {
+        if (title.length > 11) {
             this.setState((prevState) => {
                 let titleText = prevState.title.substring(0, 9);
                 titleText += '...';
-                return { title: titleText }
+                return { title: titleText };
             });
         }
 
@@ -63,11 +69,11 @@ class SitesListItem extends React.PureComponent {
                 }}
             >
                 <img
-                    src={this.state.image}
+                    src={image}
                     alt="Site-icon"
                     className="siteIcon"
                 />
-                <p style={{width: '130%'}}>{this.state.title}</p>
+                <p style={{ width: '130%', marginTop: '5px' }}>{title}</p>
             </button>
         );
     }

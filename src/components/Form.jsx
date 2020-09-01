@@ -1,14 +1,16 @@
 import React from 'react';
 
+// chayns-components
 import { Accordion, Input, Button } from 'chayns-components/lib';
 
+// component that consists of a form in a accordion
 function Form() {
-
     const [name, setName] = React.useState('');
     const [eMail, setEMail] = React.useState('');
     const [adress, setAdress] = React.useState('');
     const [comment, setComment] = React.useState('');
 
+    // sends a message to site (this site) with the form content and clears the form
     function submit() {
         if (!(name === '' || eMail === '')) {
             let message = `Nachricht von My Favourite Site:\nName: ${name};\n eMail: ${eMail};\n SiteAdresse: `;
@@ -29,10 +31,10 @@ function Form() {
 
     return (
         <div>
-            <Accordion head="Willst Du eine Site vorschlagen?" open='false'>
+            <Accordion head="Willst Du eine Site vorschlagen?">
                 <div className="accordion__content">
-                    <Input placeholder="Name" type="name" required={true} value={name} onChange={(event) => { setName(event); }}/>
-                    <Input placeholder="eMail" type="mail" required={true} value={eMail} onChange={(event) => { setEMail(event); }}/>
+                    <Input placeholder="Name" type="name" required="true" value={name} onChange={(event) => { setName(event); }}/>
+                    <Input placeholder="eMail" type="mail" required="true" value={eMail} onChange={(event) => { setEMail(event); }}/>
                     <Input placeholder="Site-Adresse" type="url" value={adress} onChange={(event) => { setAdress(event); }}/>
                     <Input placeholder="Kommentar" type="text" value={comment} onChange={(event) => { setComment(event); }}/>
                     <div style={{ textAlign: 'center', paddingTop: '8px' }}>
