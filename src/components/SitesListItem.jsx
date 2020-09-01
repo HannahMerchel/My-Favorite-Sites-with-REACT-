@@ -3,13 +3,11 @@ import PropTypes from 'prop-types';
 
 
 const propTypes = {
-    image: PropTypes.string,
     title: PropTypes.string,
     siteId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
-    image: 'https://sub60.tobit.com/l/152342?size=100\\',
     title: 'Site-Title',
 };
 
@@ -19,7 +17,7 @@ class SitesListItem extends React.PureComponent {
     constructor(props) {
         super();
         this.state = {
-            image: props.image,
+            imgUrl: 'https://sub60.tobit.com/l/152342?size=100\\',
             title: props.title,
             siteId: props.siteId,
         };
@@ -28,12 +26,13 @@ class SitesListItem extends React.PureComponent {
     }
 
     // checks if the site has a icon, if so sets the site icon as own icon
-    checkIcon() {
-        const { image } = this.state;
-        fetch(image, { method: 'HEAD' })
-            .then(() => {})
-            .catch(() => {
-                this.setState({ image: 'https://sub60.tobit.com/l/152342?size=100\\' });
+    async checkIcon() {
+        const { siteId } = this.state;
+        fetch(`https://chayns.tobit.com/storage/${siteId}/Images/icon-57.png`, { method: 'HEAD' })
+            .then((response) => {
+                if (response.status === 200) {
+                    this.setState({ imgUrl: `https://chayns.tobit.com/storage/${siteId}/Images/icon-57.png` });
+                }
             });
     }
 
@@ -44,7 +43,7 @@ class SitesListItem extends React.PureComponent {
     }
 
     render() {
-        const { title, image } = this.state;
+        const { title, imgUrl } = this.state;
         this.checkIcon();
 
         return (
@@ -64,15 +63,16 @@ class SitesListItem extends React.PureComponent {
                 }}
             >
                 <img
-                    src={image}
+                    src={imgUrl}
                     alt="Site-icon"
                     className="siteIcon"
                 />
                 <p style={{
-                    marginTop: '5px',
+                    paddingTop: '5px',
                     textOverflow: 'ellipsis',
                     overflow: 'hidden',
                     width: '90px',
+                    marginBottom: '-5px',
                     whiteSpace: 'nowrap',
                 }}
                 >
