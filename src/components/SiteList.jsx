@@ -68,27 +68,25 @@ class SitesList extends React.PureComponent {
             .then((response) => response.json())
             .then((data) => {
                 this.setState((prevState) => {
-                    const dItemComponents = [...prevState.itemComponents];
                     let newItemComponents = (data.Data).map((item) => (
                         <SiteListItem
                             key={item.siteId}
                             siteId={item.siteId}
-                            image={`https://chayns.tobit.com/storage/${item.siteId}/Images/icon-57.png`}
                             title={item.appstoreName}
                         />
                     ));
-                    // to cheack if there will be more sites available to load
+                    // to check if there will be more sites available to load
                     if (newItemComponents.length === 31) {
                         newItemComponents = newItemComponents.slice(0, 30);
                     } else {
                         this.setState({ moreSitesAvailable: false });
                     }
-                    dItemComponents.push(newItemComponents);
-                    return { itemComponents: dItemComponents };
+                    return { itemComponents: [...prevState.itemComponents, ...newItemComponents] };
                 });
                 this.setState({ loading: false });
                 chayns.hideWaitCursor();
-            });
+            })
+            .catch();
     }
 
     // increases skip and loads the additional sites
