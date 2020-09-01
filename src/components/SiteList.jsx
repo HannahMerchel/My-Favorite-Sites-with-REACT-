@@ -16,10 +16,37 @@ class SitesList extends React.PureComponent {
         };
         this.loadSites = this.loadSites.bind(this);
         this.loadMore = this.loadMore.bind(this);
+        this.onChangeSearch = this.onChangeSearch.bind(this);
+        this.searchSites = this.searchSites.bind(this);
     }
 
     componentDidMount() {
         this.loadSites();
+    }
+
+    onChangeSearch(event) {
+        this.setState((prevState) => {
+            clearTimeout(prevState.timeout);
+            const dTimeout = setTimeout(() => {
+                this.searchSites(event);
+            }, 500);
+            return { timeout: dTimeout };
+        });
+    };
+
+    async searchSites(string) {
+        if (this.state.timeout) {
+            await this.setState((prevState) => {
+                clearTimeout(prevState.timeout);
+                return {
+                    loading: true,
+                    skip: 0,
+                    searchString: string,
+                    itemComponents: [],
+                };
+            });
+            this.loadSites();
+        }
     }
 
     loadSites() {
@@ -61,7 +88,13 @@ class SitesList extends React.PureComponent {
     render() {
         return (
             <div>
-                <Input class="input" placeholder="Suche" design={Input.BORDER_DESIGN} icon="fa fa-search"/>
+                <Input
+                    class="input"
+                    placeholder="Suche"
+                    design={Input.BORDER_DESIGN}
+                    icon="fa fa-search"
+                    onChange={this.onChangeSearch}
+                />
                 <div
                     style={{
                         paddingTop: '8px',

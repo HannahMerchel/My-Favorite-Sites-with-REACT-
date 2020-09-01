@@ -35,7 +35,7 @@ class SitesListItem extends React.PureComponent {
     viewSite() {
         chayns.openUrlInBrowser(`https://chayns.net/${this.state.siteId}/`);
     }
-
+    
     render() {
         this.checkIcon();
         if (this.state.title.length > 11) {
@@ -62,7 +62,11 @@ class SitesListItem extends React.PureComponent {
                     color: 'white',
                 }}
             >
-                <img src={this.state.image} alt="Site-icon" style={{ width: '57px', height: '57px' }}/>
+                <img
+                    src={this.state.image}
+                    alt="Site-icon"
+                    className="siteIcon"
+                />
                 <p style={{width: '130%'}}>{this.state.title}</p>
             </button>
         );
