@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 // component that shows a title and introduction-paragraph
 function Intro() {
     return (

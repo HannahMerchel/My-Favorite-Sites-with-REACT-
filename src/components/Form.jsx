@@ -3,6 +3,7 @@ import React from 'react';
 // chayns-components
 import { Accordion, Input, Button } from 'chayns-components/lib';
 
+
 // component that consists of a form in a accordion
 function Form() {
     const [name, setName] = React.useState('');

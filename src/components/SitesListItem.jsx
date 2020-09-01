@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+
 const propTypes = {
     image: PropTypes.string,
     title: PropTypes.string,
@@ -11,6 +12,7 @@ const defaultProps = {
     image: 'https://sub60.tobit.com/l/152342?size=100\\',
     title: 'Site-Title',
 };
+
 
 // component that represents a site, has a link, title and icon
 class SitesListItem extends React.PureComponent {
@@ -44,13 +46,6 @@ class SitesListItem extends React.PureComponent {
     render() {
         const { title, image } = this.state;
         this.checkIcon();
-        if (title.length > 11) {
-            this.setState((prevState) => {
-                let titleText = prevState.title.substring(0, 9);
-                titleText += '...';
-                return { title: titleText };
-            });
-        }
 
         return (
             <button
@@ -73,7 +68,16 @@ class SitesListItem extends React.PureComponent {
                     alt="Site-icon"
                     className="siteIcon"
                 />
-                <p style={{ width: '130%', marginTop: '5px' }}>{title}</p>
+                <p style={{
+                    marginTop: '5px',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    width: '90px',
+                    whiteSpace: 'nowrap',
+                }}
+                >
+                    {title}
+                </p>
             </button>
         );
     }

@@ -6,6 +6,7 @@ import { Button, Input } from 'chayns-components/lib';
 // components
 import SiteListItem from './SitesListItem';
 
+
 // component with a search bar, sites-list and load-more button
 class SitesList extends React.PureComponent {
     constructor() {
@@ -111,7 +112,7 @@ class SitesList extends React.PureComponent {
                 <div
                     style={{
                         paddingTop: '8px',
-                        marginLeft: '-10px',
+                        marginLeft: '-9px',
                         display: 'flex',
                         flexWrap: 'wrap',
                         flexDirection: 'row',
