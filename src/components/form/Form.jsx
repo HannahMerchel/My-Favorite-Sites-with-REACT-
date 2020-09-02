@@ -16,18 +16,15 @@ function Form() {
     function submit() {
         if (!(name === '' || eMail === '')) {
             let message = `Nachricht von My Favourite Site:\nName: ${name};\n eMail: ${eMail};\n SiteAdresse: `;
-            if (adress !== '') message += adress;
-            else message += '/';
+            message += adress !== '' ? adress : '/';
             message += ';\n Kommentar: ';
-            if (comment !== '') message += comment;
-            else message += '/';
-            message += ';';
+            message += comment !== '' ? `${comment};` : '/;';
             chayns.intercom.sendMessageToPage({ text: message });
             setName('');
             setEMail('');
             setAdress('');
             setComment('');
-            chayns.dialog.alert('Vielen Dank für Deinen Vorschlag!', 'Dein Formula wurde versandt.');
+            chayns.dialog.alert('', 'Vielen Dank für Deinen Vorschlag!\nDein Formula wurde versandt.');
         }
     }
 
