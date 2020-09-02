@@ -3,16 +3,6 @@ import './siteListItem.scss';
 import PropTypes from 'prop-types';
 
 
-const propTypes = {
-    title: PropTypes.string,
-    siteId: PropTypes.string.isRequired,
-};
-
-const defaultProps = {
-    title: 'Site-Title',
-};
-
-
 // component that represents a site, has a link, title and icon
 class SitesListItem extends React.PureComponent {
     constructor(props) {
@@ -67,6 +57,15 @@ class SitesListItem extends React.PureComponent {
         );
     }
 }
+
+const propTypes = {
+    title: PropTypes.string,
+    siteId: PropTypes.string.isRequired,
+};
+
+const defaultProps = {
+    title: 'Site-Title',
+};
 
 SitesListItem.propTypes = propTypes;
 SitesListItem.defaultProps = defaultProps;

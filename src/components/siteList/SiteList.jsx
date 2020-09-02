@@ -13,16 +13,16 @@ class SiteList extends React.PureComponent {
     constructor() {
         super();
         this.state = {
-            searchString: 'love',
+            searchString: 'ahaus',
             skip: 0,
             listItemComponents: [],
-            loading: false,
+            isLoading: false,
             moreSitesAvailable: true,
         };
         this.loadSites = this.loadSites.bind(this);
         this.loadMore = this.loadMore.bind(this);
         this.onChangeSearch = this.onChangeSearch.bind(this);
-        this.searchSites = this.searchSites.bind(this);
+        this.handleSearchSites = this.handleSearchSites.bind(this);
     }
 
     // loads the first 30 Sites when the component is created
@@ -35,22 +35,22 @@ class SiteList extends React.PureComponent {
         this.setState((prevState) => {
             clearTimeout(prevState.searchTimeout);
             const dTimeout = setTimeout(() => {
-                this.searchSites(event);
+                this.handleSearchSites(event);
             }, 500);
             return { searchTimeout: dTimeout };
         });
     }
 
     // clears the old site list and searches new sites (once the site list isn't loading)
-    async searchSites(string) {
-        const { loading } = this.state;
-        if (!loading) {
+    async handleSearchSites(string) {
+        const { isLoading } = this.state;
+        if (!isLoading) {
             await this.setState((prevState) => {
                 clearTimeout(prevState.searchTimeout);
                 return {
-                    loading: true,
+                    isLoading: true,
                     skip: 0,
-                    searchString: string !== '' ? string : 'love',
+                    searchString: string !== '' ? string : 'ahaus',
                     listItemComponents: [],
                 };
             });
@@ -64,11 +64,11 @@ class SiteList extends React.PureComponent {
     loadSites() {
         const { searchString, skip } = this.state;
         chayns.showWaitCursor();
-        this.setState({ loading: true });
+        this.setState({ isLoading: true });
         fetch(`https://chayns1.tobit.com/TappApi/Site/SlitteApp?SearchString=${searchString}&Skip=${skip}&Take=31`)
             .then((response) => response.json())
-            .then((data) => {
-                this.setState((prevState) => {
+            .then(async (data) => {
+                await this.setState((prevState) => {
                     let newListItemComponents = (data.Data).map((item) => (
                         <SiteListItem
                             key={item.siteId}
@@ -84,7 +84,7 @@ class SiteList extends React.PureComponent {
                     }
                     return { listItemComponents: [...prevState.listItemComponents, ...newListItemComponents] };
                 });
-                this.setState({ loading: false });
+                this.setState({ isLoading: false });
                 chayns.hideWaitCursor();
             })
             .catch();
@@ -97,7 +97,7 @@ class SiteList extends React.PureComponent {
     }
 
     render() {
-        const { listItemComponents, loading, moreSitesAvailable } = this.state;
+        const { listItemComponents, isLoading, moreSitesAvailable } = this.state;
         return (
             <div>
                 <Input
@@ -114,7 +114,7 @@ class SiteList extends React.PureComponent {
                 <div className="site_load_button__wrapper">
                     <Button
                         onClick={this.loadMore}
-                        disabled={(loading || !moreSitesAvailable)}
+                        disabled={(isLoading || !moreSitesAvailable)}
                     >
                         Mehr laden
                     </Button>
