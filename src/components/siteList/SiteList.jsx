@@ -5,7 +5,7 @@ import './siteList.scss';
 import { Button, Input } from 'chayns-components/lib';
 
 // components
-import SiteListItem from './siteListItem/SitesListItem';
+import SiteListItem from './siteListItem/SiteListItem';
 
 
 // component with a search bar, sites-list and load-more button
@@ -15,7 +15,7 @@ class SiteList extends React.PureComponent {
         this.state = {
             searchString: 'love',
             skip: 0,
-            itemComponents: [],
+            listItemComponents: [],
             loading: false,
             moreSitesAvailable: true,
         };
@@ -25,19 +25,19 @@ class SiteList extends React.PureComponent {
         this.searchSites = this.searchSites.bind(this);
     }
 
-    // loads the first 30 Sites when the cpmonent is created
+    // loads the first 30 Sites when the component is created
     componentDidMount() {
         this.loadSites();
     }
 
-    // starts a timer to search new sites (frist clears the previous one)
+    // starts a timer to search new sites (first clears the previous one)
     onChangeSearch(event) {
         this.setState((prevState) => {
-            clearTimeout(prevState.timeout);
+            clearTimeout(prevState.searchTimeout);
             const dTimeout = setTimeout(() => {
                 this.searchSites(event);
             }, 500);
-            return { timeout: dTimeout };
+            return { searchTimeout: dTimeout };
         });
     }
 
@@ -46,12 +46,12 @@ class SiteList extends React.PureComponent {
         const { loading } = this.state;
         if (!loading) {
             await this.setState((prevState) => {
-                clearTimeout(prevState.timeout);
+                clearTimeout(prevState.searchTimeout);
                 return {
                     loading: true,
                     skip: 0,
                     searchString: string !== '' ? string : 'love',
-                    itemComponents: [],
+                    listItemComponents: [],
                 };
             });
             this.loadSites();
@@ -60,7 +60,7 @@ class SiteList extends React.PureComponent {
         }
     }
 
-    // loads and appends list of sites with the current search string
+    // loads and appends list of sites with results of the current search string
     loadSites() {
         const { searchString, skip } = this.state;
         chayns.showWaitCursor();
@@ -69,7 +69,7 @@ class SiteList extends React.PureComponent {
             .then((response) => response.json())
             .then((data) => {
                 this.setState((prevState) => {
-                    let newItemComponents = (data.Data).map((item) => (
+                    let newListItemComponents = (data.Data).map((item) => (
                         <SiteListItem
                             key={item.siteId}
                             siteId={item.siteId}
@@ -77,12 +77,12 @@ class SiteList extends React.PureComponent {
                         />
                     ));
                     // to check if there will be more sites available to load
-                    if (newItemComponents.length === 31) {
-                        newItemComponents = newItemComponents.slice(0, 30);
+                    if (newListItemComponents.length === 31) {
+                        newListItemComponents = newListItemComponents.slice(0, 30);
                     } else {
                         this.setState({ moreSitesAvailable: false });
                     }
-                    return { itemComponents: [...prevState.itemComponents, ...newItemComponents] };
+                    return { listItemComponents: [...prevState.listItemComponents, ...newListItemComponents] };
                 });
                 this.setState({ loading: false });
                 chayns.hideWaitCursor();
@@ -97,11 +97,11 @@ class SiteList extends React.PureComponent {
     }
 
     render() {
-        const { itemComponents, loading, moreSitesAvailable } = this.state;
+        const { listItemComponents, loading, moreSitesAvailable } = this.state;
         return (
             <div>
                 <Input
-                    class="input"
+                    class="search"
                     placeholder="Suche"
                     design={Input.BORDER_DESIGN}
                     icon="fa fa-search"
@@ -109,7 +109,7 @@ class SiteList extends React.PureComponent {
                     className="site_search__input"
                 />
                 <div className="site_list__wrapper">
-                    {itemComponents}
+                    {listItemComponents}
                 </div>
                 <div className="site_load_button__wrapper">
                     <Button
