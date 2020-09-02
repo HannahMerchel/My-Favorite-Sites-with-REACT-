@@ -18,7 +18,7 @@ class SitesListItem extends React.PureComponent {
     constructor(props) {
         super();
         this.state = {
-            imgUrl: 'https://sub60.tobit.com/l/152342?size=100\\',
+            imgUrl: 'https://sub60.tobit.com/l/152342?size=60\\',
             title: props.title,
             siteId: props.siteId,
         };
@@ -53,11 +53,13 @@ class SitesListItem extends React.PureComponent {
                 onClick={this.viewSite}
                 className="site_item__wrapper"
             >
-                <img
-                    src={imgUrl}
-                    alt="Site-icon"
-                    className="siteIcon"
-                />
+                <div className="site_item_icon__wrapper">
+                    <img
+                        src={imgUrl}
+                        alt="Site-icon"
+                        className="site_item__icon"
+                    />
+                </div>
                 <p className="site_item__title">
                     {title}
                 </p>
