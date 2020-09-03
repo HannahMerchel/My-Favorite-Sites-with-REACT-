@@ -1,0 +1,34 @@
+.site_search__input{
+    margin-top: 15px;
+    //margin-left: 55%;
+    margin-bottom: 5px;
+    //transform: translateY(-105px);
+}
+
+.site_list__wrapper {
+    margin-top: 15px;
+    margin-left: 0px;
+    margin-right: -50px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    place-items: center;
+    justify-content: flex-start;
+}
+
+.site_load_button__wrapper {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.headline__wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.headline__searchbar{
+    margin-bottom: 8px;
+    margin-top: -3px;
+}
