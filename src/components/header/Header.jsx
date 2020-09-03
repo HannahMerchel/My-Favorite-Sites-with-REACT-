@@ -2,7 +2,7 @@ import React from 'react';
 
 
 // component that shows a title and introduction-paragraph
-function Intro() {
+function Header() {
     return (
         <div>
             <h1> My Favourite Sites </h1>
@@ -13,4 +13,4 @@ function Intro() {
     );
 }
 
-export default Intro;
+export default Header;

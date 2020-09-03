@@ -3,14 +3,14 @@ import React from 'react';
 
 // Components
 import SiteList from './siteList/SiteList';
-import Intro from './intro/Intro';
+import Header from './header/Header';
 import Form from './form/Form';
 
 
 function App() {
     return (
         <div>
-            <Intro/>
+            <Header/>
             <SiteList/>
             <Form/>
         </div>

@@ -1,7 +1,7 @@
 {
-  "name": "chayns-react-todo-example",
+  "name": "myFavSites",
   "version": "1.0.0",
-  "description": "chayns® + react example of a simple todo list",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --progress --config ./webpack/dev.babel.js --https",
@@ -47,7 +47,7 @@
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
     "terser-webpack-plugin": "^4.1.0",
-    "webpack": "^4.41.2",
+    "webpack": "^4.44.1",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.11.0"
   },

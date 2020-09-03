@@ -1,11 +1,14 @@
 .site_search__input{
     margin-top: 15px;
+    //margin-left: 55%;
     margin-bottom: 5px;
+    //transform: translateY(-105px);
 }
 
 .site_list__wrapper {
-    padding-top: 15px;
-    margin-left: -9px;
+    margin-top: 15px;
+    margin-left: 0px;
+    margin-right: -50px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;

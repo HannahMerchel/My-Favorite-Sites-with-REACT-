@@ -2,7 +2,7 @@ import React from 'react';
 import './siteList.scss';
 
 // chayns-components
-import { Button, Input } from 'chayns-components/lib';
+import { Button, Input, Accordion } from 'chayns-components/lib';
 
 // components
 import SiteListItem from './siteListItem/SiteListItem';
@@ -100,6 +100,27 @@ class SiteList extends React.PureComponent {
         const { listItemComponents, isLoading, moreSitesAvailable } = this.state;
         return (
             <div>
+                <Accordion head="Sites" defaultOpened onSearch={this.onChangeSearch}>
+                    <div className="accordion__content">
+                        <div className="site_list__wrapper">
+                            {listItemComponents}
+                        </div>
+                        <div className="site_load_button__wrapper">
+                            <Button
+                                onClick={this.loadMore}
+                                disabled={(isLoading || !moreSitesAvailable)}
+                            >
+                                Mehr laden
+                            </Button>
+                        </div>
+                    </div>
+                </Accordion>
+            </div>
+        );
+    }
+}
+
+/* 
                 <Input
                     class="search"
                     placeholder="Suche"
@@ -107,21 +128,6 @@ class SiteList extends React.PureComponent {
                     icon="fa fa-search"
                     onChange={this.onChangeSearch}
                     className="site_search__input"
-                />
-                <div className="site_list__wrapper">
-                    {listItemComponents}
-                </div>
-                <div className="site_load_button__wrapper">
-                    <Button
-                        onClick={this.loadMore}
-                        disabled={(isLoading || !moreSitesAvailable)}
-                    >
-                        Mehr laden
-                    </Button>
-                </div>
-            </div>
-        );
-    }
-}
+                /> */
 
 export default SiteList;
