@@ -2,11 +2,10 @@ import React from 'react';
 import './siteList.scss';
 
 // chayns-components
-import { Button, Input, Accordion } from 'chayns-components/lib';
+import { Button, Input } from 'chayns-components/lib';
 
 // components
 import SiteListItem from './siteListItem/SiteListItem';
-
 
 // component with a search bar, sites-list and load-more button
 class SiteList extends React.PureComponent {
@@ -100,34 +99,34 @@ class SiteList extends React.PureComponent {
         const { listItemComponents, isLoading, moreSitesAvailable } = this.state;
         return (
             <div>
-                <Accordion head="Sites" defaultOpened onSearch={this.onChangeSearch}>
-                    <div className="accordion__content">
-                        <div className="site_list__wrapper">
-                            {listItemComponents}
-                        </div>
-                        <div className="site_load_button__wrapper">
-                            <Button
-                                onClick={this.loadMore}
-                                disabled={(isLoading || !moreSitesAvailable)}
-                            >
-                                Mehr laden
-                            </Button>
-                        </div>
-                    </div>
-                </Accordion>
+                <div className="headline__wrapper">
+                    <h1> My Favourite Sites </h1>
+                    <Input
+                        class="search"
+                        placeholder="Suche"
+                        design={Input.BORDER_DESIGN}
+                        icon="fa fa-search"
+                        onChange={this.onChangeSearch}
+                        className="headline__searchbar"
+                    />
+                </div>
+                <p>
+                    Willkommen auf meiner Liste von Chayns-Sites! Hier kannst Du nach Sites suchen und sie Dir ansehen.
+                </p>
+                <div className="site_list__wrapper">
+                    {listItemComponents}
+                </div>
+                <div className="site_load_button__wrapper">
+                    <Button
+                        onClick={this.loadMore}
+                        disabled={(isLoading || !moreSitesAvailable)}
+                    >
+                        Mehr laden
+                    </Button>
+                </div>
             </div>
         );
     }
 }
-
-/* 
-                <Input
-                    class="search"
-                    placeholder="Suche"
-                    design={Input.BORDER_DESIGN}
-                    icon="fa fa-search"
-                    onChange={this.onChangeSearch}
-                    className="site_search__input"
-                /> */
 
 export default SiteList;

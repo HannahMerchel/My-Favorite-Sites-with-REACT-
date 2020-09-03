@@ -21,3 +21,14 @@
     margin-top: 5px;
     margin-bottom: 15px;
 }
+
+.headline__wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.headline__searchbar{
+    margin-bottom: 8px;
+    margin-top: -3px;
+}
