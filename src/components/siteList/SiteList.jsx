@@ -64,15 +64,16 @@ class SiteList extends React.PureComponent {
         const { searchString, skip } = this.state;
         chayns.showWaitCursor();
         this.setState({ isLoading: true });
-        fetch(`https://chayns1.tobit.com/TappApi/Site/SlitteApp?SearchString=${searchString}&Skip=${skip}&Take=31`)
+        fetch(`https://chayns2.tobit.com/SiteSearchApi/location/search/${searchString}/?skip=${skip}&take=31`)
             .then((response) => response.json())
             .then(async (data) => {
+                console.log(data);
                 await this.setState((prevState) => {
-                    let newListItemComponents = (data.Data).map((item) => (
+                    let newListItemComponents = data.map((item) => (
                         <SiteListItem
                             key={item.siteId}
                             siteId={item.siteId}
-                            title={item.appstoreName}
+                            title={item.locationName}
                         />
                     ));
                     // to check if there will be more sites available to load
