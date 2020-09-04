@@ -19,7 +19,7 @@ class SiteList extends React.PureComponent {
             moreSitesAvailable: true,
         };
         this.loadSites = this.loadSites.bind(this);
-        this.loadMore = this.loadMore.bind(this);
+        this.handleLoadMore = this.handleLoadMore.bind(this);
         this.onChangeSearch = this.onChangeSearch.bind(this);
         this.handleSearchSites = this.handleSearchSites.bind(this);
     }
@@ -36,14 +36,14 @@ class SiteList extends React.PureComponent {
             const dTimeout = setTimeout(() => {
                 this.handleSearchSites(event);
             }, 500);
-            return { searchTimeout: dTimeout };
+            return { searchTimeout: dTimeout, searchString: event };
         });
     }
 
-    // clears the old site list and searches new sites (once the site list isn't loading)
+    // clears the old site list and searches new sites (if the site list isn't loading)
     async handleSearchSites(string) {
-        const { isLoading } = this.state;
-        if (!isLoading) {
+        const { isLoading, searchString } = this.state;
+        if (!isLoading && searchString === string) {
             await this.setState((prevState) => {
                 clearTimeout(prevState.searchTimeout);
                 return {
@@ -54,8 +54,6 @@ class SiteList extends React.PureComponent {
                 };
             });
             this.loadSites();
-        } else {
-            this.onChangeSearch(string);
         }
     }
 
@@ -67,7 +65,6 @@ class SiteList extends React.PureComponent {
         fetch(`https://chayns2.tobit.com/SiteSearchApi/location/search/${searchString}/?skip=${skip}&take=31`)
             .then((response) => response.json())
             .then(async (data) => {
-                console.log(data);
                 await this.setState((prevState) => {
                     let newListItemComponents = data.map((item) => (
                         <SiteListItem
@@ -83,7 +80,7 @@ class SiteList extends React.PureComponent {
                         this.setState({ moreSitesAvailable: false });
                     }
                     return { listItemComponents: [...prevState.listItemComponents, ...newListItemComponents] };
-                });
+                })
                 this.setState({ isLoading: false });
                 chayns.hideWaitCursor();
             })
@@ -91,7 +88,7 @@ class SiteList extends React.PureComponent {
     }
 
     // increases skip and loads the additional sites
-    async loadMore() {
+    async handleLoadMore() {
         await this.setState((prevState) => ({ skip: prevState.skip + 30 }));
         this.loadSites();
     }
@@ -119,7 +116,7 @@ class SiteList extends React.PureComponent {
                 </div>
                 <div className="site_load_button__wrapper">
                     <Button
-                        onClick={this.loadMore}
+                        onClick={this.handleLoadMore}
                         disabled={(isLoading || !moreSitesAvailable)}
                     >
                         Mehr laden
