@@ -2,7 +2,6 @@ import React from 'react';
 import './siteListItem.scss';
 import PropTypes from 'prop-types';
 
-
 // component that represents a site, has a link, title and icon
 class SitesListItem extends React.PureComponent {
     constructor(props) {

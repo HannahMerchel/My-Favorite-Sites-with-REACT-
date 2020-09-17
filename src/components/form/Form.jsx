@@ -4,7 +4,6 @@ import './form.scss';
 // chayns-components
 import { Accordion, Input, Button } from 'chayns-components/lib';
 
-
 // component that consists of a form in a accordion
 function Form() {
     const [name, setName] = React.useState('');
@@ -35,14 +34,14 @@ function Form() {
                     <Input
                         placeholder="Name"
                         type="name"
-                        required="true"
+                        required
                         value={name}
                         onChange={(event) => { setName(event); }}
                     />
                     <Input
                         placeholder="eMail"
                         type="mail"
-                        required="true"
+                        required
                         value={eMail}
                         onChange={(event) => { setEMail(event); }}
                     />

@@ -5,7 +5,6 @@ import React from 'react';
 import SiteList from './siteList/SiteList';
 import Form from './form/Form';
 
-
 function App() {
     return (
         <div>

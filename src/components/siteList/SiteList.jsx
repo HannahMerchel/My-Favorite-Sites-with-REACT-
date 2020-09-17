@@ -29,34 +29,6 @@ class SiteList extends React.PureComponent {
         this.loadSites();
     }
 
-    // starts a timer to search new sites (first clears the previous one)
-    onChangeSearch(event) {
-        this.setState((prevState) => {
-            clearTimeout(prevState.searchTimeout);
-            const dTimeout = setTimeout(() => {
-                this.handleSearchSites(event);
-            }, 500);
-            return { searchTimeout: dTimeout, searchString: event };
-        });
-    }
-
-    // clears the old site list and searches new sites (if the site list isn't loading)
-    async handleSearchSites(string) {
-        const { isLoading, searchString } = this.state;
-        if (!isLoading && searchString === string) {
-            await this.setState((prevState) => {
-                clearTimeout(prevState.searchTimeout);
-                return {
-                    isLoading: true,
-                    skip: 0,
-                    searchString: string !== '' ? string : 'ahaus',
-                    listItemComponents: [],
-                };
-            });
-            this.loadSites();
-        }
-    }
-
     // loads and appends list of sites with results of the current search string
     loadSites() {
         const { searchString, skip } = this.state;
@@ -79,9 +51,8 @@ class SiteList extends React.PureComponent {
                     } else {
                         this.setState({ moreSitesAvailable: false });
                     }
-                    return { listItemComponents: [...prevState.listItemComponents, ...newListItemComponents] };
+                    return { listItemComponents: [...prevState.listItemComponents, ...newListItemComponents], isLoading: false };
                 })
-                this.setState({ isLoading: false });
                 chayns.hideWaitCursor();
             })
             .catch();
@@ -91,6 +62,33 @@ class SiteList extends React.PureComponent {
     async handleLoadMore() {
         await this.setState((prevState) => ({ skip: prevState.skip + 30 }));
         this.loadSites();
+    }
+
+    // starts a timer to search new sites (first clears the previous one)
+    onChangeSearch(event) {
+        this.setState((prevState) => {
+            clearTimeout(prevState.searchTimeout);
+            const dTimeout = setTimeout(() => {
+                this.handleSearchSites(event);
+            }, 500);
+            return { searchTimeout: dTimeout, searchString: event };
+        });
+    }
+
+    // clears the old site list and searches new sites (if the site list isn't loading)
+    async handleSearchSites(string) {
+        const { isLoading, searchString } = this.state;
+        if (!isLoading && searchString === string) {
+            await this.setState((prevState) => {
+                return {
+                    isLoading: true,
+                    skip: 0,
+                    searchString: string !== '' ? string : 'ahaus',
+                    listItemComponents: [],
+                };
+            });
+            this.loadSites();
+        }
     }
 
     render() {
