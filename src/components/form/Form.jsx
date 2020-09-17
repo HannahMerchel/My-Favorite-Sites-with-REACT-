@@ -5,23 +5,23 @@ import './form.scss';
 import { Accordion, Input, Button } from 'chayns-components/lib';
 
 // component that consists of a form in a accordion
-function Form() {
+const Form = () => {
     const [name, setName] = React.useState('');
     const [eMail, setEMail] = React.useState('');
-    const [adress, setAdress] = React.useState('');
+    const [address, setAddress] = React.useState('');
     const [comment, setComment] = React.useState('');
 
     // sends a message to site (this site) with the form content and clears the form
     function submit() {
         if (!(name === '' || eMail === '')) {
             let message = `Nachricht von My Favourite Site:\nName: ${name};\n eMail: ${eMail};\n SiteAdresse: `;
-            message += adress !== '' ? adress : '/';
+            message += address !== '' ? address : '/';
             message += ';\n Kommentar: ';
             message += comment !== '' ? `${comment};` : '/;';
             chayns.intercom.sendMessageToPage({ text: message });
             setName('');
             setEMail('');
-            setAdress('');
+            setAddress('');
             setComment('');
             chayns.dialog.alert('', 'Vielen Dank für Deinen Vorschlag!\nDein Formula wurde versandt.');
         }
@@ -48,8 +48,8 @@ function Form() {
                     <Input
                         placeholder="Site-Adresse"
                         type="url"
-                        value={adress}
-                        onChange={(event) => { setAdress(event); }}
+                        value={address}
+                        onChange={(event) => { setAddress(event); }}
                     />
                     <Input
                         placeholder="Kommentar"
@@ -69,6 +69,6 @@ function Form() {
             </Accordion>
         </div>
     );
-}
+};
 
 export default Form;

@@ -3,59 +3,41 @@ import './siteListItem.scss';
 import PropTypes from 'prop-types';
 
 // component that represents a site, has a link, title and icon
-class SitesListItem extends React.PureComponent {
-    constructor(props) {
-        super();
-        this.state = {
-            imgUrl: 'https://sub60.tobit.com/l/152342?size=60\\',
-            title: props.title,
-            siteId: props.siteId,
-        };
-        this.checkIcon = this.checkIcon.bind(this);
-        this.viewSite = this.viewSite.bind(this);
-    }
+const SitesListItem = ({ title, siteId }) => {
+    const [imgUrl, setImgUrl] = React.useState('https://sub60.tobit.com/l/152342?size=60\\');
 
     // checks if the site has a icon, if so sets the site icon as own icon
-    checkIcon() {
-        const { siteId } = this.state;
-        fetch(`https://chayns.tobit.com/storage/${siteId}/Images/icon-57.png`, { method: 'HEAD' })
-            .then((response) => {
-                if (response.status === 200) {
-                    this.setState({ imgUrl: `https://chayns.tobit.com/storage/${siteId}/Images/icon-57.png` });
-                }
-            });
-    }
+    fetch(`https://chayns.tobit.com/storage/${siteId}/Images/icon-57.png`, { method: 'HEAD' })
+        .then((response) => {
+            if (response.status === 200) {
+                setImgUrl(`https://chayns.tobit.com/storage/${siteId}/Images/icon-57.png`);
+            }
+        });
 
     // opens the site in a new tab
-    viewSite() {
-        const { siteId } = this.state;
+    const viewSite = () => {
         chayns.openUrlInBrowser(`https://chayns.net/${siteId}/`);
-    }
+    };
 
-    render() {
-        const { title, imgUrl } = this.state;
-        this.checkIcon();
-
-        return (
-            <button
-                type="button"
-                onClick={this.viewSite}
-                className="site_item__wrapper"
-            >
-                <div className="site_item_icon__wrapper">
-                    <img
-                        src={imgUrl}
-                        alt="Site-icon"
-                        className="site_item__icon"
-                    />
-                </div>
-                <p className="site_item__title">
-                    {title}
-                </p>
-            </button>
-        );
-    }
-}
+    return (
+        <button
+            type="button"
+            onClick={viewSite}
+            className="site_item__wrapper"
+        >
+            <div className="site_item_icon__wrapper">
+                <img
+                    src={imgUrl}
+                    alt="Site-icon"
+                    className="site_item__icon"
+                />
+            </div>
+            <p className="site_item__title">
+                {title}
+            </p>
+        </button>
+    );
+};
 
 const propTypes = {
     title: PropTypes.string,

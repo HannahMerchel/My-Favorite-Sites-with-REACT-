@@ -8,121 +8,105 @@ import { Button, Input } from 'chayns-components/lib';
 import SiteListItem from './siteListItem/SiteListItem';
 
 // component with a search bar, sites-list and load-more button
-class SiteList extends React.PureComponent {
-    constructor() {
-        super();
-        this.state = {
-            searchString: 'ahaus',
-            skip: 0,
-            listItemComponents: [],
-            isLoading: false,
-            moreSitesAvailable: true,
-        };
-        this.loadSites = this.loadSites.bind(this);
-        this.handleLoadMore = this.handleLoadMore.bind(this);
-        this.onChangeSearch = this.onChangeSearch.bind(this);
-        this.handleSearchSites = this.handleSearchSites.bind(this);
-    }
-
-    // loads the first 30 Sites when the component is created
-    componentDidMount() {
-        this.loadSites();
-    }
+const SiteList = () => {
+    const [searchString, setSearchString] = React.useState('ahaus');
+    const [skip, setSkip] = React.useState(0);
+    const [listItemComponents, setListItemComponents] = React.useState([]);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [moreSitesAvailable, setMoreSitesAvailable] = React.useState(true);
+    const [searchTimeout, setSearchTimeout] = React.useState();
 
     // loads and appends list of sites with results of the current search string
-    loadSites() {
-        const { searchString, skip } = this.state;
+    const loadSites = () => {
         chayns.showWaitCursor();
-        this.setState({ isLoading: true });
+        setIsLoading(true);
         fetch(`https://chayns2.tobit.com/SiteSearchApi/location/search/${searchString}/?skip=${skip}&take=31`)
             .then((response) => response.json())
             .then(async (data) => {
-                await this.setState((prevState) => {
-                    let newListItemComponents = data.map((item) => (
-                        <SiteListItem
-                            key={item.siteId}
-                            siteId={item.siteId}
-                            title={item.locationName}
-                        />
-                    ));
-                    // to check if there will be more sites available to load
-                    if (newListItemComponents.length === 31) {
-                        newListItemComponents = newListItemComponents.slice(0, 30);
-                    } else {
-                        this.setState({ moreSitesAvailable: false });
-                    }
-                    return { listItemComponents: [...prevState.listItemComponents, ...newListItemComponents], isLoading: false };
-                })
+                let newListItemComponents = data.map((item) => (
+                    <SiteListItem
+                        key={item.siteId}
+                        siteId={item.siteId}
+                        title={item.locationName}
+                    />
+                ));
+                // to check if there will be more sites available to load
+                if (newListItemComponents.length === 31) {
+                    newListItemComponents = newListItemComponents.slice(0, 30);
+                    setMoreSitesAvailable(true);
+                } else {
+                    setMoreSitesAvailable(false);
+                }
+                if (skip !== 0) {
+                    setListItemComponents([...listItemComponents, ...newListItemComponents]);
+                } else {
+                    setListItemComponents([]);
+                    setListItemComponents([...newListItemComponents]);
+                }
+                setIsLoading(false);
                 chayns.hideWaitCursor();
             })
             .catch();
-    }
+    };
 
     // increases skip and loads the additional sites
-    async handleLoadMore() {
-        await this.setState((prevState) => ({ skip: prevState.skip + 30 }));
-        this.loadSites();
-    }
+    const handleLoadMore = async () => {
+        setSkip(skip + 30);
+    };
+
+    // sets skip to 0 causing the list to clear and load or does so directly (if the site list isn't loading)
+    const handleSearchSites = async (string) => {
+        if (!isLoading && searchString === string) {
+            if (skip !== 0) setSkip(0);
+            else loadSites();
+        }
+    };
+
+    // updates the search string
+    const onChangeSearch = async (event) => {
+        await setSearchString(event !== '' ? event : 'ahaus');
+    };
 
     // starts a timer to search new sites (first clears the previous one)
-    onChangeSearch(event) {
-        this.setState((prevState) => {
-            clearTimeout(prevState.searchTimeout);
-            const dTimeout = setTimeout(() => {
-                this.handleSearchSites(event);
-            }, 500);
-            return { searchTimeout: dTimeout, searchString: event };
-        });
-    }
+    React.useEffect(() => {
+        clearTimeout(searchTimeout);
+        setSearchTimeout(setTimeout(() => handleSearchSites(searchString), 500));
+    }, [searchString]);
 
-    // clears the old site list and searches new sites (if the site list isn't loading)
-    async handleSearchSites(string) {
-        const { isLoading, searchString } = this.state;
-        if (!isLoading && searchString === string) {
-            await this.setState((prevState) => {
-                return {
-                    isLoading: true,
-                    skip: 0,
-                    searchString: string !== '' ? string : 'ahaus',
-                    listItemComponents: [],
-                };
-            });
-            this.loadSites();
-        }
-    }
+    // loads more / new sites whenever skip changes
+    React.useEffect(() => {
+        loadSites();
+    }, [skip]);
 
-    render() {
-        const { listItemComponents, isLoading, moreSitesAvailable } = this.state;
-        return (
-            <div>
-                <div className="headline__wrapper">
-                    <h1> My Favourite Sites </h1>
-                    <Input
-                        class="search"
-                        placeholder="Suche"
-                        design={Input.BORDER_DESIGN}
-                        icon="fa fa-search"
-                        onChange={this.onChangeSearch}
-                        className="headline__searchbar"
-                    />
-                </div>
-                <p>
-                    Willkommen auf meiner Liste von Chayns-Sites! Hier kannst Du nach Sites suchen und sie Dir ansehen.
-                </p>
-                <div className="site_list__wrapper">
-                    {listItemComponents}
-                </div>
-                <div className="site_load_button__wrapper">
-                    <Button
-                        onClick={this.handleLoadMore}
-                        disabled={(isLoading || !moreSitesAvailable)}
-                    >
-                        Mehr laden
-                    </Button>
-                </div>
+    return (
+        <div>
+            <div className="headline__wrapper">
+                <h1> My Favourite Sites </h1>
+                <Input
+                    class="search"
+                    placeholder="Suche"
+                    design={Input.BORDER_DESIGN}
+                    icon="fa fa-search"
+                    onChange={onChangeSearch}
+                    className="headline__searchbar"
+                />
             </div>
-        );
-    }
-}
+            <p>
+                Willkommen auf meiner Liste von Chayns-Sites! Hier kannst Du nach Sites suchen und sie Dir ansehen.
+            </p>
+            <div className="site_list__wrapper">
+                {listItemComponents}
+            </div>
+            <div className="site_load_button__wrapper">
+                <Button
+                    onClick={handleLoadMore}
+                    disabled={(isLoading || !moreSitesAvailable)}
+                >
+                    Mehr laden
+                </Button>
+            </div>
+        </div>
+    );
+};
 
 export default SiteList;

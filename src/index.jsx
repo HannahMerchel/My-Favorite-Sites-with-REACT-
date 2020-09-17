@@ -1,11 +1,8 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 
-// Constants
-//import { IS_DEVELOPMENT } from './constants/environment';
-
 // Components
-import App from "./components/App.jsx"
+import App from './components/App';
 
 // Get tapp element
 const tappElement = document.querySelector('.tapp');

@@ -5,14 +5,12 @@ import React from 'react';
 import SiteList from './siteList/SiteList';
 import Form from './form/Form';
 
-function App() {
-    return (
-        <div>
-            <SiteList/>
-            <Form/>
-        </div>
-    );
-}
+const App = () => (
+    <div>
+        <SiteList/>
+        <Form/>
+    </div>
+);
 
 export default App;
 export const HotApp = hot(App);
