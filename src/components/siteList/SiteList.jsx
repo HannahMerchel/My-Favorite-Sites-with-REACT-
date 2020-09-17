@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './siteList.scss';
 
 // chayns-components
@@ -9,12 +9,13 @@ import SiteListItem from './siteListItem/SiteListItem';
 
 // component with a search bar, sites-list and load-more button
 const SiteList = () => {
-    const [searchString, setSearchString] = React.useState('ahaus');
-    const [skip, setSkip] = React.useState(0);
-    const [listItemComponents, setListItemComponents] = React.useState([]);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [moreSitesAvailable, setMoreSitesAvailable] = React.useState(true);
-    const [searchTimeout, setSearchTimeout] = React.useState();
+    const [searchString, setSearchString] = useState('ahaus');
+    const [skip, setSkip] = useState(0);
+    const [listItemComponents, setListItemComponents] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [moreSitesAvailable, setMoreSitesAvailable] = useState(true);
+    const [searchTimeout, setSearchTimeout] = useState(null);
+    const [wasLoaded, setWasLoaded] = useState(false);
 
     // loads and appends list of sites with results of the current search string
     const loadSites = () => {
@@ -57,8 +58,11 @@ const SiteList = () => {
     // sets skip to 0 causing the list to clear and load or does so directly (if the site list isn't loading)
     const handleSearchSites = async (string) => {
         if (!isLoading && searchString === string) {
-            if (skip !== 0) setSkip(0);
-            else loadSites();
+            if (skip !== 0) {
+                setSkip(0);
+            } else {
+                loadSites();
+            }
         }
     };
 
@@ -67,14 +71,19 @@ const SiteList = () => {
         await setSearchString(event !== '' ? event : 'ahaus');
     };
 
+    // sets true after first render
+    useEffect(() => {
+        setWasLoaded(true);
+    });
+
     // starts a timer to search new sites (first clears the previous one)
-    React.useEffect(() => {
+    useEffect(() => {
         clearTimeout(searchTimeout);
         setSearchTimeout(setTimeout(() => handleSearchSites(searchString), 500));
-    }, [searchString]);
+    }, [searchString && wasLoaded === true]);
 
     // loads more / new sites whenever skip changes
-    React.useEffect(() => {
+    useEffect(() => {
         loadSites();
     }, [skip]);
 
